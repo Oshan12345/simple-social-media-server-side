@@ -5,6 +5,14 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const Post = mongoose.model("Post");
 const Chat = mongoose.model("Chat");
+const Pusher = require("pusher");
+const pusher = new Pusher({
+  appId: "1195694",
+  key: "400843c3e3c79864883e",
+  secret: "2f5e5a26b7a15cda905a",
+  cluster: "mt1",
+  useTLS: true,
+});
 // router.get("/following-list", (req, res) => {
 //   User.find({})
 //     .select("followings , _id")
@@ -34,7 +42,7 @@ router.get("/following-list/:userId", (req, res) => {
     .populate("followings", "_id name")
     .then((result) => {
       const followings = result[0];
-      console.log("sam---------------", followings);
+      //   console.log("sam---------------", followings);
       const newToChat = followings[0];
       whomToChat = [...followings.followings];
       // console.log("hey--", followings);
@@ -57,7 +65,7 @@ router.get("/following-list/:userId", (req, res) => {
           res.send(whomToChat);
         });
     });
-  console.log(whomToChat);
+  // console.log(whomToChat);
 });
 
 // router.get("/follower-list", (req, res) => {
@@ -139,7 +147,7 @@ router.get("/follower-list/:userId", (req, res) => {
 router.get("/create-chat/:senderId/:receiverId", (req, res) => {
   const sender = req.params.senderId;
   const receiver = req.params.receiverId;
-  console.log({ sender, receiver });
+  // console.log({ sender, receiver });
   // Chat.find({
   //   sender:
   //     mongoose.Types.ObjectId(sender) || mongoose.Types.ObjectId(receiver),
@@ -153,7 +161,7 @@ router.get("/create-chat/:senderId/:receiverId", (req, res) => {
   })
     .populate("messages.sendBy", "_id name")
     .then((response) => {
-      console.log("hey sagar here is the response", response);
+      // console.log("hey sagar here is the response", response);
       //
       if (response.length) {
         const responseObj = response[0];
@@ -215,8 +223,8 @@ router.put("/continue-chat", varifyToken, (req, res) => {
     chatText: req.body.message,
     sendBy: req.user._id,
   };
-  console.log("chatId", chatId);
-  console.log(message);
+  // console.log("chatId", chatId);
+  //console.log(message);
   Chat.findByIdAndUpdate(
     chatId,
     { $push: { messages: message } },
@@ -224,7 +232,15 @@ router.put("/continue-chat", varifyToken, (req, res) => {
   )
     .populate("messages.sendBy", "_id name")
     .then((result) => {
+      //Pusher
+
       console.log(result);
+      pusher.trigger("Chats", "my-chats", {
+        ...result,
+      });
+
+      //pusher
+      console.log(JSON.stringify(result));
       res.json(result);
     });
 });

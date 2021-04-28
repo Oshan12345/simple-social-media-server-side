@@ -15,9 +15,9 @@ module.exports = (req, res, next) => {
       return res.send({ message: "Please sign in." });
     }
 
-    console.log(decoded); // bar
+    // console.log(decoded); // bar
     const { _id } = decoded;
-    console.log(_id);
+    //  console.log(_id);
     User.findById(_id).then((userData) => {
       // console.log("sssssaaaammm", req);
       req.user = userData;
