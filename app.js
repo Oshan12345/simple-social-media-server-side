@@ -19,16 +19,6 @@ mongoose.connect(MONGOURI, {
 });
 // pusher stuff
 
-const Pusher = require("pusher");
-
-const pusher = new Pusher({
-  appId: "1195694",
-  key: "400843c3e3c79864883e",
-  secret: "2f5e5a26b7a15cda905a",
-  cluster: "mt1",
-  useTLS: true,
-});
-
 // const msgCollection = mongoose.connection.collection("Chat");
 // const changeStream = msgCollection.watch()
 // changeStream.on('change',(change)=>{

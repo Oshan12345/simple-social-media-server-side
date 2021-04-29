@@ -6,11 +6,19 @@ const User = mongoose.model("User");
 const Post = mongoose.model("Post");
 const Chat = mongoose.model("Chat");
 const Pusher = require("pusher");
+require("dotenv").config();
+console.log(
+  "sssssssssss-> ",
+  process.env.APP_ID,
+  process.env.KEY,
+  process.env.SECRET,
+  process.env.CLUSTER
+);
 const pusher = new Pusher({
-  appId: "1195694",
-  key: "400843c3e3c79864883e",
-  secret: "2f5e5a26b7a15cda905a",
-  cluster: "mt1",
+  appId: process.env.APP_ID,
+  key: process.env.KEY,
+  secret: process.env.SECRET,
+  cluster: process.env.CLUSTER,
   useTLS: true,
 });
 // router.get("/following-list", (req, res) => {
