@@ -21,6 +21,8 @@ module.exports = (req, res, next) => {
     User.findById(_id).then((userData) => {
       // console.log("sssssaaaammm", req);
       req.user = userData;
+
+      console.log("helllllllllllllllllloooooooooooooo-", userData);
       //  console.log("divya", req.user);
       next();
     });

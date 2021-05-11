@@ -5,16 +5,27 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("../middleWare/varifyToken");
+var nodemailer = require("nodemailer");
+var sgTransport = require("nodemailer-sendgrid-transport");
 const { JWT_SECRET } = require("../keys");
+require("dotenv").config();
 router.get("/home", (req, res) => {
   res.send("hello from home");
 });
 
-bcrypt.hash("bacon", 8).then((res) => console.log("sagar-", res));
+var mailer = nodemailer.createTransport(
+  sgTransport({
+    auth: {
+      api_key: process.env.EMAIL_KEY,
+    },
+  })
+);
+//bcrypt.hash("bacon", 8).then((res) => console.log("sagar-", res));
 
-router.get("/blog", verifyToken, (req, res) => {
-  res.send("hello from blog");
-});
+// router.get("/blog", verifyToken, (req, res) => {
+//   res.send("hello from blog");
+// });
+console.log(process.env.EMAIL_KEY);
 router.post("/signUp", (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -41,6 +52,21 @@ router.post("/signUp", (req, res) => {
           user
             .save()
             .then((savedUser) => {
+              var email = {
+                to: savedUser.email,
+                from: "mr.oshanbiswas@gmail.com",
+                subject: "Hi there. You have successfully created your account",
+                text: "Awesome sauce",
+                html: "<b>Awesome sauce</b>",
+              };
+
+              mailer.sendMail(email, function (err, response) {
+                if (err) {
+                  console.log("errrrrrrrrrrrrrrrrrrrrrrrrrr", err);
+                }
+                console.log("responsssssssssssssssse", response);
+              });
+
               const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
               res.send({
                 id: savedUser._id,
@@ -69,7 +95,7 @@ router.post("/logIn", (req, res) => {
   }
 
   User.findOne({ email: email }).then((savedUser) => {
-    console.log(savedUser);
+    console.log("this is saveduser data", savedUser);
     if (!savedUser) {
       return res
         .status(422)
@@ -81,7 +107,7 @@ router.post("/logIn", (req, res) => {
       if (response) {
         const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
         // console.log(token);
-        //  console.log(response);
+        console.log("sagar here is response----", response);
         res.send({
           id: savedUser._id,
           name: savedUser.name,
@@ -89,6 +115,8 @@ router.post("/logIn", (req, res) => {
           message: "logged in successfully",
           isLoggedIn: true,
           token,
+          followings: savedUser.followings,
+          followers: savedUser.followers,
         });
       } else {
         res.send({ message: "Invalid email or password", isLoggedIn: false });

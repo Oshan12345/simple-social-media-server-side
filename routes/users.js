@@ -6,7 +6,7 @@ const User = mongoose.model("User");
 const Post = mongoose.model("Post");
 
 router.get("/user/:id", varifyToken, (req, res) => {
-  console.log(req.params.id);
+  // console.log(req.params.id);
   User.findOne({ _id: req.params.id })
     .select("-password")
     .then((user) => {
@@ -24,24 +24,30 @@ router.get("/user/:id", varifyToken, (req, res) => {
     });
 });
 
+//
+// db.inventory.update(
+//   { _id: 2 },
+//   { $addToSet: { tags: { $each: ["camera", "electronics", "accessories"] } } }
+// );
+//
+
 // function for following
 router.put("/follow", varifyToken, (req, res) => {
-  //here followId is whom to follow
   User.findByIdAndUpdate(
     req.body.followID,
     {
-      $push: { followers: req.user._id },
+      $addToSet: { followers: { $each: [req.user._id] } },
     },
     { new: true },
     (err, result) => {
       if (err) {
         return res.send({ err });
       }
-
+      //   console.log("ssssssssssssssssssssssssssss----------------------", result);
       User.findByIdAndUpdate(
         req.user._id,
         {
-          $push: { followings: req.body.followID },
+          $addToSet: { followings: { $each: [req.body.followID] } },
         },
         { new: true, upsert: true }
       )
@@ -51,13 +57,40 @@ router.put("/follow", varifyToken, (req, res) => {
         });
     }
   );
+
+  //here followId is whom to follow
+  // User.findByIdAndUpdate(
+  //   req.body.followID,
+  //   {
+  //     $push: { followers: req.user._id },
+  //   },
+  //   { new: true },
+  //   (err, result) => {
+  //     if (err) {
+  //       return res.send({ err });
+  //     }
+
+  //     User.findByIdAndUpdate(
+  //       req.user._id,
+  //       {
+  //         $push: { followings: req.body.followID },
+  //       },
+  //       { new: true, upsert: true }
+  //     )
+  //       .select("-password")
+  //       .then((result) => {
+  //         res.send(result);
+  //       });
+  //   }
+  // );
 });
 
 // function for unfollowing
 router.put("/unfollow", varifyToken, (req, res) => {
   //here followId is whom to follow
+  //  console.log("ssssssssssssssss-", req.body.unFollowID);
   User.findByIdAndUpdate(
-    req.body.UnFollowID,
+    req.body.unFollowID,
     {
       $pull: { followers: req.user._id },
     },
@@ -74,10 +107,25 @@ router.put("/unfollow", varifyToken, (req, res) => {
         },
         { new: true, upsert: true }
       )
-        .select("password")
+        .select("-password")
         .then((result) => {
+          //    console.log("ssssssssssssssssssssssss----", req.body.unFollowID);
           res.send(result);
         });
+    }
+  );
+});
+
+router.put("/update-profile-pic", varifyToken, (req, res) => {
+  // console.log("req.user._id", req.user._id);
+  // console.log("body", req.body);
+  User.findByIdAndUpdate(req.user._id, { profilePic: req.body.imageUrl }).exec(
+    function (err, response) {
+      if (response) {
+        res.send(response);
+      } else {
+        res.send(err);
+      }
     }
   );
 });

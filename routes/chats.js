@@ -47,7 +47,7 @@ router.get("/following-list/:userId", (req, res) => {
   let whomToChat;
   User.find(mongoose.Types.ObjectId(id))
     .select("followings , _id")
-    .populate("followings", "_id name")
+    .populate("followings", "_id name profilePic")
     .then((result) => {
       const followings = result[0];
       //   console.log("sam---------------", followings);
@@ -56,7 +56,8 @@ router.get("/following-list/:userId", (req, res) => {
       // console.log("hey--", followings);
       // console.log("before", whomToChat);
       Chat.find({ receiver: mongoose.Types.ObjectId(id) })
-        .populate("sender", "_id, name")
+        .populate("sender", "_id name profilePic")
+
         .then((anotherResponse) => {
           // console.log("sssssssssssssssssssss-------", anotherResponse);
           // if (anotherResponse.length) {

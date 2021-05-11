@@ -15,6 +15,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  profilePic: {
+    type: String,
+    default:
+      "http://res.cloudinary.com/oshan/image/upload/v1620756009/q1gzdgvlw2pqoa7qnypf.png",
+  },
   followers: [
     {
       type: ObjectId,
