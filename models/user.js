@@ -32,6 +32,8 @@ const userSchema = new Schema({
       ref: "User",
     },
   ],
+  resetToken: String,
+  expiredToken: Date,
 });
 
 mongoose.model("User", userSchema);

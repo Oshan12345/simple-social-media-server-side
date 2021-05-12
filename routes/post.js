@@ -4,17 +4,17 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Post = mongoose.model("Post");
 router.post("/make-post", varifyToken, (req, res) => {
-  const { title, body, photo } = req.body;
-
+  //const { title, body, photo } = req.body;
+  const { body, photo } = req.body;
   // console.log("sagar here is the photo", photo);
   // console.log(title, body);
-  if (!title || !body) {
+  if (!body) {
     return res.send({ message: "please fill all the fields." });
   }
   req.user.password = undefined;
   // console.log("sagar here is the use", req.user);
   const post = new Post({
-    title,
+    //  title,
     body,
     photo,
     postedBy: req.user,
@@ -31,6 +31,7 @@ router.get("/get-posts", varifyToken, (req, res) => {
   Post.find({})
     .populate("postedBy", "_id name")
     .populate("comments.commentBy", "_id name")
+    .sort("-createdAt")
     .then((result) => {
       res.send({ result });
     });
@@ -44,6 +45,7 @@ router.get("/get-followings-post", varifyToken, (req, res) => {
   Post.find({ postedBy: { $in: req.user.followings } })
     .populate("postedBy", "_id name")
     .populate("comments.commentBy", "_id name")
+    .sort("-createdAt")
     .then((result) => {
       res.send({ result });
     });

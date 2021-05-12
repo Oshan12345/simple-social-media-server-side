@@ -5,6 +5,15 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const Post = mongoose.model("Post");
 
+router.get("/all-users", varifyToken, (req, res) => {
+  console.log("sssssssssssssssssssssssssssssssssssssss", req.user._id);
+  User.find({ _id: { $ne: req.user._id } })
+    .select("-password")
+    .then((result) => {
+      res.send({ result });
+    });
+});
+
 router.get("/user/:id", varifyToken, (req, res) => {
   // console.log(req.params.id);
   User.findOne({ _id: req.params.id })
