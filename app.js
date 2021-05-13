@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const { MONGOURI } = require("./keys");
 
 app.use(express.json());
-
+app.use(cors());
 mongoose.connect(MONGOURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
