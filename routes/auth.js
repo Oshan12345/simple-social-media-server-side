@@ -23,12 +23,7 @@ var mailer = nodemailer.createTransport(
     },
   })
 );
-//bcrypt.hash("bacon", 8).then((res) => console.log("sagar-", res));
 
-// router.get("/blog", verifyToken, (req, res) => {
-//   res.send("hello from blog");
-// });
-console.log(process.env.EMAIL_KEY);
 router.post("/signUp", (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -65,9 +60,9 @@ router.post("/signUp", (req, res) => {
 
               mailer.sendMail(email, function (err, response) {
                 if (err) {
-                  console.log("errrrrrrrrrrrrrrrrrrrrrrrrrr", err);
+                  console.log(err);
                 }
-                console.log("responsssssssssssssssse", response);
+                console.log(response);
               });
 
               const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
@@ -98,19 +93,15 @@ router.post("/logIn", (req, res) => {
   }
 
   User.findOne({ email: email }).then((savedUser) => {
-    console.log("this is saveduser data", savedUser);
     if (!savedUser) {
       return res
         .status(422)
         .send({ message: "Invalid email or password", isLoggedIn: false });
     }
     bcrypt.compare(password, savedUser.password).then((response) => {
-      console.log(response);
-
       if (response) {
         const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
-        // console.log(token);
-        console.log("sagar here is response----", response);
+
         res.send({
           id: savedUser._id,
           name: savedUser.name,
@@ -156,9 +147,9 @@ router.post("/change-password", (req, res) => {
 
           mailer.sendMail(email, function (err, response) {
             if (err) {
-              console.log("errrrrrrrrrrrrrrrrrrrrrrrrrr", err);
+              console.log(err);
             }
-            console.log("responsssssssssssssssse", response);
+            console.log(response);
           });
 
           res.send({ message: `Check Your email.` });
@@ -171,13 +162,12 @@ router.post("/change-password", (req, res) => {
 router.put("/update-password", (req, res) => {
   const newPassword = req.body.newPassword;
   const token = req.body.resetToken;
-  console.log("newPassword,", newPassword, token);
+
   User.findOne({
     resetToken: token,
     expiredToken: { $gt: Date.now() },
   }).then((user) => {
     if (!user) {
-      //  console.log("userrrrrrrrrrrrrrrrrrrr", user);
       return res.send({ message: "Try again . the session has expired" });
     } else {
       bcrypt.hash(newPassword, 12).then((hashedPass) => {
@@ -186,7 +176,6 @@ router.put("/update-password", (req, res) => {
         user.expiredToken = undefined;
 
         user.save().then((result) => {
-          console.log("updated result", result);
           res.send({ message: "Password has been updated successfully...." });
         });
       });

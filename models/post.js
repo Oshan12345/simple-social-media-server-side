@@ -36,9 +36,4 @@ const postSchema = new Schema(
   }
 );
 
-// title: {
-//   type: String,
-//   required: true,
-// },
-//to establish relation between to model we can use ref. here type :ObjectedId refer to id of User table.
 mongoose.model("Post", postSchema);

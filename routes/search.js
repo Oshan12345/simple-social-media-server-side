@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/search-user/:query", (req, res) => {
   const query = new RegExp(`^${req.params.query}`, "i");
-  console.log(query);
+
   User.find(
     { name: { $regex: query } }
     // $text: { $search: "`d`", $caseSensitive: false },
