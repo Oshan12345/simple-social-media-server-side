@@ -25,18 +25,18 @@ mongoose.connect(MONGOURI, {
 //   console.log(change)
 // })
 
-mongoose.connection.once("open", () => {
-  console.log("helloooo");
+// mongoose.connection.once("open", () => {
+//   console.log("helloooo");
 
-  //pusher
-  const msgCollection = mongoose.connection.collection("Chats");
-  const changeStream = msgCollection.watch();
-  console.log("ssssssss-------------------->", changeStream.on);
-  changeStream.on("change", (change) => {
-    console.log("dipa-------------------->", change);
-  });
-  //pusher
-});
+//   //pusher
+//   // const msgCollection = mongoose.connection.collection("Chats");
+//   // const changeStream = msgCollection.watch();
+//   // console.log("ssssssss-------------------->", changeStream.on);
+//   // changeStream.on("change", (change) => {
+//   //   console.log("dipa-------------------->", change);
+//   // });
+//   //pusher
+// });
 
 //end of pusher
 mongoose.connection.on("connected", () => {
@@ -57,4 +57,5 @@ app.use(require("./routes/auth"));
 app.use(require("./routes/post"));
 app.use(require("./routes/users"));
 app.use(require("./routes/chats"));
+app.use(require("./routes/search"));
 app.listen(port);

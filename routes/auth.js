@@ -8,6 +8,7 @@ const verifyToken = require("../middleWare/varifyToken");
 var nodemailer = require("nodemailer");
 var sgTransport = require("nodemailer-sendgrid-transport");
 const { JWT_SECRET } = require("../keys");
+//crypto is build in feature of node
 const crypto = require("crypto");
 
 require("dotenv").config();
