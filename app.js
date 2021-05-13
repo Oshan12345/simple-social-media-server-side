@@ -36,12 +36,7 @@ app.use(require("./routes/users"));
 app.use(require("./routes/chats"));
 app.use(require("./routes/search"));
 
-if (process.env.NODE_ENV == "production") {
-  app.use(express.static("client/build"));
-  const path = require("path");
-  app.get("*", (req, res) => {
-    req.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-  });
-}
-
+app.get("/hello", (req, res) => {
+  res.send("hello world.");
+});
 app.listen(port);
