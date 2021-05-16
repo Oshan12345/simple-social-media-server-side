@@ -22,4 +22,4 @@ React, React-router-dom,pusher,node,express JS,mongoDB,nodemailer,sendgrid,bcryp
 |  |URL |
 | ------ | ------ |
 | Live site | https://buddy-zone.vercel.app/ |
-| Server side code | https://github.com/sagar-biswas1/buddy-zone-client-side |
+| Client side code | https://github.com/sagar-biswas1/buddy-zone-client-side |
