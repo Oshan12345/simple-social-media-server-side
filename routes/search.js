@@ -10,9 +10,11 @@ router.get("/search-user/:query", (req, res) => {
   User.find(
     { name: { $regex: query } }
     // $text: { $search: "`d`", $caseSensitive: false },
-  ).then((result) => {
-    res.send(result);
-  });
+  )
+    .select("-password")
+    .then((result) => {
+      res.send(result);
+    });
 });
 
 module.exports = router;
