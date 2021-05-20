@@ -140,7 +140,7 @@ router.post("/change-password", (req, res) => {
             //  text: "Awesome sauce",
             html: `<b>
                  You have requested for resetting your password. 
-                 Click this link to reset. <a href="http://localhost:3000/reset/${token}">Reset password</a>
+                 Click this link to reset. <a href="https://buddy-zone.vercel.app/reset/${token}">Reset password</a>
    
                </b>`,
           };
